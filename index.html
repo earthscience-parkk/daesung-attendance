@@ -1,64 +1,67 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- 앱 제목 -->
-  <title>대성고 출석</title>
+    <title>대성고 야간자율학습 출석</title>
 
-  <!-- PWA 설정 -->
-  <link rel="manifest" href="manifest.json" />
-  <link rel="icon" href="icon-192.png" />
-  <link rel="apple-touch-icon" href="icon-192.png" />
+    <!-- PWA 설정 -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#ffffff">
 
-  <meta name="theme-color" content="#2962ff" />
-
-  <style>
-    body {
-      background: #eef4ff;
-      font-family: 'Segoe UI', sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
-    .card {
-      text-align: center;
-    }
-    button {
-      padding: 18px 26px;
-      font-size: 20px;
-      font-weight: 700;
-      background: #2962ff;
-      color: white;
-      border: none;
-      border-radius: 14px;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #1e47c3;
-    }
-  </style>
+    <style>
+        body {
+            font-family: "Segoe UI", sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background: #eef4ff;
+        }
+        .container {
+            padding-top: 120px;
+        }
+        .logo {
+            width: 180px;
+            margin-bottom: 30px;
+        }
+        button {
+            padding: 16px 26px;
+            font-size: 20px;
+            border: none;
+            border-radius: 12px;
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005fcc;
+        }
+    </style>
 </head>
 
 <body>
-  <div class="card">
-    <h2>대성고 자율학습 출석</h2>
-    <p>아래 버튼을 누르면 출석 페이지로 이동합니다.</p>
+    <div class="container">
+        <img src="icon-192.png" class="logo" alt="학교 로고">
 
-    <!-- 👉 GAS URL만 수정하면 됨 -->
-    <button onclick="location.href='https://script.google.com/macros/s/AKfycbw4MJxMqJLe8uS08uV_09wbRTrBRxEjby5QopVTigaoUjQCKbpmsGDJWjx2_eLb3573DA/exec'">
-      출석하기
-    </button>
-  </div>
+        <h2>대성고 야간자율학습 출석</h2>
 
-  <script>
-    // 서비스워커 등록
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("service-worker.js");
-    }
-  </script>
+        <!-- 버튼 클릭 시 Safari로 열기 -->
+        <button onclick="goAttendance()">출석 체크하기</button>
+    </div>
+
+    <script>
+        function goAttendance() {
+            // 강제로 Safari에서 열리도록 처리
+            window.location.href = 
+                "https://script.google.com/macros/s/AKfycbw4MJxMqJLe8uS08uV_09wbRTrBRxEjby5QopVTigaoUjQCKbpmsGDJWjx2_eLb3573DA/exec";
+        }
+
+        // PWA 서비스워커 등록
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("service-worker.js");
+        }
+    </script>
 </body>
 </html>
