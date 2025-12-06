@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- 앱 제목 -->
+  <title>대성고 출석</title>
+
+  <!-- PWA 설정 -->
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icon-192.png" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+
+  <meta name="theme-color" content="#2962ff" />
+
+  <style>
+    body {
+      background: #eef4ff;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .card {
+      text-align: center;
+    }
+    button {
+      padding: 18px 26px;
+      font-size: 20px;
+      font-weight: 700;
+      background: #2962ff;
+      color: white;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #1e47c3;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <h2>대성고 자율학습 출석</h2>
+    <p>아래 버튼을 누르면 출석 페이지로 이동합니다.</p>
+
+    <!-- 👉 GAS URL만 수정하면 됨 -->
+    <button onclick="location.href='https://script.google.com/macros/s/AKfycbw4MJxMqJLe8uS08uV_09wbRTrBRxEjby5QopVTigaoUjQCKbpmsGDJWjx2_eLb3573DA/exec'">
+      출석하기
+    </button>
+  </div>
+
+  <script>
+    // 서비스워커 등록
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("service-worker.js");
+    }
+  </script>
+</body>
+</html>
