@@ -1,7 +1,7 @@
 {
   "name": "대성고등학교",
   "short_name": "대성고",
-  "start_url": "index.html",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#eef4ff",
   "theme_color": "#2962ff",
