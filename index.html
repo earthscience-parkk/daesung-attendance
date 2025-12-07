@@ -8,7 +8,7 @@
 
     <!-- PWA 설정 -->
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#ffffff">
+    <meta name="theme-color" content="#eef4ff">
 
     <style>
         body {
@@ -17,51 +17,99 @@
             margin: 0;
             padding: 0;
             background: #eef4ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
-        .container {
-            padding-top: 120px;
+
+        .card {
+            background: white;
+            width: 330px;
+            padding: 28px;
+            border-radius: 18px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
         }
+
         .logo {
-            width: 180px;
-            margin-bottom: 30px;
+            width: 150px;
+            margin-bottom: 20px;
         }
-        button {
-            padding: 16px 26px;
-            font-size: 20px;
-            border: none;
-            border-radius: 12px;
-            background-color: #007bff;
-            color: white;
+
+        .title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .warn {
+            color: #c60000;
+            font-size: 17px;
+            font-weight: 600;
+            margin: 20px 0;
+        }
+
+        .kakao-btn {
+            display: inline-block;
+            background: #FEE500;
+            padding: 12px 18px;
+            border-radius: 10px;
             font-weight: bold;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #005fcc;
+            color: #3A1D1D;
+            font-size: 17px;
+            text-decoration: none;
         }
     </style>
 </head>
 
 <body>
-    <div class="container">
+
+    <div class="card">
         <img src="icon-192.png" class="logo" alt="학교 로고">
-
-        <h2>대성고 야간자율학습 출석</h2>
-
-        <!-- 버튼 클릭 시 Safari로 열기 -->
-        <button onclick="goAttendance()">출석 체크하기</button>
+        <div class="title">대성고 야간자율학습 출석</div>
+        <div id="msg">로딩 중…</div>
     </div>
 
     <script>
-        function goAttendance() {
-            // 강제로 Safari에서 열리도록 처리
-            window.location.href = 
-                "https://script.google.com/macros/s/AKfycbw4MJxMqJLe8uS08uV_09wbRTrBRxEjby5QopVTigaoUjQCKbpmsGDJWjx2_eLb3573DA/exec";
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbw4MJxMqJLe8uS08uV_09wbRTrBRxEjby5QopVTigaoUjQCKbpmsGDJWjx2_eLb3573DA/exec";
+
+        function isKakao() {
+            return navigator.userAgent.toLowerCase().includes("kakaotalk");
         }
+
+        function isSafariOrChrome() {
+            const ua = navigator.userAgent.toLowerCase();
+            return ua.includes("safari") || ua.includes("crios") || ua.includes("fxios") || ua.includes("chrome");
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+
+            if (isKakao()) {
+                // 카카오톡 인앱 → 바로 GAS로 이동
+                location.href = GAS_URL;
+                return;
+            }
+
+            // Safari/Chrome/GitHub 앱/홈화면 등 → 출석 불가 & 카카오 안내만 표시
+            document.getElementById("msg").innerHTML = `
+                <div class="warn">
+                    ⚠️ 출석은 <b>카카오톡 QR 스캔</b>으로만 가능합니다.<br><br>
+                    홈 화면 앱 또는 사파리·크롬에서는<br>
+                    출석 기능이 실행되지 않습니다.
+                </div>
+
+                <a class="kakao-btn"
+                   href="kakaotalk://inappbrowser/open?url=${encodeURIComponent(GAS_URL)}">
+                    카카오톡으로 열기
+                </a>
+            `;
+        });
 
         // PWA 서비스워커 등록
         if ("serviceWorker" in navigator) {
             navigator.serviceWorker.register("service-worker.js");
         }
     </script>
+
 </body>
 </html>
