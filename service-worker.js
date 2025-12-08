@@ -1,4 +1,4 @@
-const CACHE_NAME = "ds-attend-cache-v3";   // ← 버전만 바꾸면 자동 업데이트됨
+const CACHE_NAME = "ds-attend-cache-v4";   // ← 버전만 바꾸면 자동 업데이트됨
 
 self.addEventListener("install", (e) => {
   e.waitUntil(
