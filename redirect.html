@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>출석 연결 중…</title>
+
+    <!-- 0. 새 창 대신 현재 창에서 이동하도록 강제 -->
+    <meta http-equiv="refresh" content="0; url=">
+
+    <style>
+        body {
+            font-family: "Segoe UI", sans-serif;
+            background: #eef4ff;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .msg {
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
+
+    <script>
+        // 1) QR → redirect.html → target URL 로 이동
+        document.addEventListener("DOMContentLoaded", () => {
+            const url = new URL(location.href);
+            const target = url.searchParams.get("target");
+
+            if (target) {
+                // 가장 안전한 이동 방식 (새창 방지)
+                location.replace(target + "?from=redirect");
+            } else {
+                document.body.innerHTML = "<div class='msg'>잘못된 접근입니다.</div>";
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <div class="msg">잠시만 기다려 주세요…</div>
+</body>
+</html>
