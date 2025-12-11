@@ -25,13 +25,12 @@
     <script>
         document.addEventListener("DOMContentLoaded", () => {
 
-            // 1) GitHub Pages → redirect.html → GAS로 이동
             const params = new URLSearchParams(window.location.search);
             const target = params.get("target");
 
             if (target) {
-                // 가장 안전한 이동 방식
-                location.replace(target + "?from=github");
+                // 🔵 가장 안전한 이동 방식 — 브라우저 히스토리 남지 않음
+                window.location.replace(target + "?from=github");
             } else {
                 document.body.innerHTML = "<div class='msg'>잘못된 접근입니다.</div>";
             }
