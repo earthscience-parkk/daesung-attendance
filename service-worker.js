@@ -1,5 +1,5 @@
 // ✅ 정적 리소스만 안전하게 캐시
-const CACHE_NAME = "ds-attend-static-v5";
+const CACHE_NAME = "ds-attend-static-v15";
 
 // 캐시할 파일(정적 파일만!)
 const ASSETS = [
