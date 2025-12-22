@@ -1,44 +1,103 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>출석 연결 중…</title>
-
-    <style>
-        body {
-            font-family: "Segoe UI", sans-serif;
-            background: #eef4ff;
-            height: 100vh;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .msg {
-            font-size: 18px;
-            color: #333;
-        }
-    </style>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-
-            const params = new URLSearchParams(window.location.search);
-            const target = params.get("target");
-
-            if (target) {
-                // 🔵 가장 안전한 이동 방식 — 브라우저 히스토리 남지 않음
-                window.location.replace(target + "?from=github");
-            } else {
-                document.body.innerHTML = "<div class='msg'>잘못된 접근입니다.</div>";
-            }
-        });
-    </script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>대성고 출석 이동</title>
+  <style>
+    body { font-family: system-ui, -apple-system, sans-serif; padding: 16px; }
+    .box { max-width: 420px; margin: 0 auto; border: 1px solid #ddd; border-radius: 12px; padding: 16px; }
+    input { width: 100%; font-size: 18px; padding: 12px; box-sizing: border-box; margin-top: 8px; }
+    button, a.btn { display:block; width:100%; margin-top:10px; padding: 12px; font-size: 16px; border-radius: 10px; border: none; text-align:center; text-decoration:none; }
+    button { background:#111; color:#fff; }
+    a.btn { background:#f2f2f2; color:#111; }
+    .small { color:#666; font-size: 13px; margin-top: 10px; line-height: 1.4; }
+  </style>
 </head>
-
 <body>
-    <div class="msg">잠시만 기다려 주세요…</div>
+  <div class="box">
+    <h2>출석 페이지로 이동</h2>
+    <div id="ui"></div>
+  </div>
+
+<script>
+(function () {
+  const ui = document.getElementById("ui");
+  const params = new URLSearchParams(location.search);
+  const target = params.get("target"); // GAS 웹앱 URL
+
+  if (!target) {
+    ui.innerHTML = "<p>target 파라미터가 없습니다.</p>";
+    return;
+  }
+
+  // ✅ 인앱/iframe에서도 확실히 상단으로 이동
+  function go(url) {
+    try { window.top.location.replace(url); }
+    catch (e) { location.replace(url); }
+  }
+
+  // ✅ localStorage 안전 접근(사파리 프라이빗 등 대비)
+  function safeSet(key, value) {
+    try { localStorage.setItem(key, value); return true; } catch (e) { return false; }
+  }
+  function safeGet(key) {
+    try { return localStorage.getItem(key); } catch (e) { return ""; }
+  }
+
+  // ✅ register_done.html에서 넘겨준 setId가 있으면 저장 후 바로 출석 이동
+  const setId = (params.get("setId") || "").trim();
+  if (setId) {
+    safeSet("studentId", setId);
+    const url = target + "?id=" + encodeURIComponent(setId) + "&from=github";
+    go(url);
+    return;
+  }
+
+  const savedId = (safeGet("studentId") || "").trim();
+
+  // ✅ 저장된 학번이 있으면 즉시 출석 처리
+  if (savedId) {
+    const url = target + "?id=" + encodeURIComponent(savedId) + "&from=github";
+    go(url);
+    return;
+  }
+
+  // ❗ 저장된 게 없으면: 1회 입력 UI
+  ui.innerHTML = `
+    <p>처음 1회만 학번(또는 아이디)을 입력하면 다음부터 자동 출석됩니다.</p>
+    <label>학번/아이디</label>
+    <input id="sid" placeholder="예) 10103 또는 pbh6899" autocomplete="off" inputmode="text" />
+    <button id="saveGo">저장하고 출석하기</button>
+    <a class="btn" id="goRegister" href="#">처음이면 등록하기(이메일+학번)</a>
+    <div class="small">
+      ※ 등록은 학교 계정(@daesunggo.gwe.hs.kr)만 가능합니다.<br>
+      ※ 저장값은 이 기기/브라우저에만 저장됩니다(다른 폰에서는 다시 1회 입력).
+    </div>
+  `;
+
+  const sidEl = document.getElementById("sid");
+  const saveGo = () => {
+    const sid = (sidEl.value || "").trim();
+    if (!sid) return alert("학번/아이디를 입력하세요.");
+    safeSet("studentId", sid);
+    const url = target + "?id=" + encodeURIComponent(sid) + "&from=github";
+    go(url);
+  };
+
+  document.getElementById("saveGo").addEventListener("click", saveGo);
+
+  // ✅ 엔터로도 출석
+  sidEl.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") saveGo();
+  });
+
+  document.getElementById("goRegister").addEventListener("click", (ev) => {
+    ev.preventDefault();
+    // 등록 화면은 GAS에서 redirect 예외 처리되어 있음
+    go(target + "?mode=register&from=github");
+  });
+})();
+</script>
 </body>
 </html>
